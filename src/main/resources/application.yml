@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  mail:
+    host: smtp.mailtrap.io
+    port: 2525
+    username: 8c78f32cc92ed8
+    password: b690d1d992f77d
+    protocol: smtp
+    properties.mail.smtp:
+      ssl: no
+      tls: yes
+  messages:
+    basename: i18n/messages
+  thymeleaf:
+    prefix: classpath:/templates/
+  web:
+    resources:
+      static-locations: classpath:/web/, classpath:/static/
+
+app:
+  security:
+    jwt:
+      secret: NmQ0NjQ4M2NkMWY1YWJiMTA0YzllMzdiZWExMWJjMTVlMzMwYzc3ZGMwZmE1MDA2ZmNhYWMwMDIzYTgyMDIxYTFjYjYzMzlmYzA1MTk1OTI4NzM1MjI4YjQ4NDZjNGI3OWI2YWQ3MDQzMTI4ZjNmMTI2NzQzNjg1ODkzNTM0ZjA
+      token-validity-in-seconds: 86400
+      token-validity-in-seconds-for-remember-me: 2592000
+  mail:
+    reset-key-validity-second: 120

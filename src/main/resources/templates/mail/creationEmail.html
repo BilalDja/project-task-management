@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <title th:text="#{email.creation.title}"></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="#{email.greeting(${user.username})}"></p>
+<p th:text="#{email.creation.text}"></p>
+<p>Your password: <b th:text="${123}"></b></p>
+<p>
+  <span th:text="#{email.ending}"></span>
+  </br>
+  <em th:text="#{email.signature}"></em>
+</p>
+</body>
+</html>

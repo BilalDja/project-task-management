@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "src/main/resources/templates",
+            "outputPath": "src/main/resources/web",
             "index": "src/main/web/index.html",
             "main": "src/main/web/main.ts",
             "polyfills": "src/main/web/polyfills.ts",
@@ -31,9 +31,14 @@
               "src/main/web/assets"
             ],
             "styles": [
-              "src/main/web/styles.scss"
+              "src/main/web/assets/scss/app.scss",
+              "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/datatables.net/js/jquery.dataTables.min.js",
+              "node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js"
+            ]
           },
           "configurations": {
             "production": {
