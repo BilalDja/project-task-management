@@ -1,7 +1,9 @@
 package me.djamelkorei.projecttaskmanagement.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import me.djamelkorei.projecttaskmanagement.domain.enumeration.Priority;
 import me.djamelkorei.projecttaskmanagement.domain.enumeration.Status;
 
 import javax.persistence.*;
@@ -31,16 +33,24 @@ public class Task implements Serializable {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status")
+  @JsonIgnore
   private Status status;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "priority")
+  @JsonIgnore
+  private Priority priority;
+
+  @JsonIgnore
   private Instant createdAt;
-
+  @JsonIgnore
   private Instant completedAt;
-
+  @JsonIgnore
   private Instant approvedAt;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
+  @JsonIgnore
   private User user;
 
 }

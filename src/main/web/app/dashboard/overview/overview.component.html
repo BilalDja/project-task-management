@@ -1,0 +1,59 @@
+<div class="mb-5">
+  <h2 class="fw-bold">{{ date | date}}</h2>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 mb-5">
+    <div class="d-flex gap-4">
+      <div class="py-0 ps-4" style="border-left: 2px solid rgba(0,0,0,0.2)">
+        <span class="d-block">Task requested</span>
+        <span class="h4 fw-bold mb-0">{{ overview.taskRequestedTotal }}</span>
+      </div>
+      <div class="py-0 ps-4" style="border-left: 2px solid rgba(0,0,0,0.2)">
+        <span class="d-block">Task in progress</span>
+        <span class="h4 fw-bold mb-0">{{ overview.taskInProgressTotal }}</span>
+      </div>
+      <div class="py-0 ps-4" style="border-left: 2px solid rgba(0,0,0,0.2)">
+        <span class="d-block">Task completed</span>
+        <span class="h4 fw-bold mb-0">{{ overview.taskCompletedTotal }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 mb-5 ">
+    <div class="d-flex justify-content-end  gap-4 align-items-center">
+      <div class="group-image">
+        <span>{{ overview.usersTotal }}+</span>
+        <img *ngFor="let user of overview.users" class="img-fluid" src="{{ user.photoName ? 'http://localhost:8080/api/files/'+user.photoName : 'assets/image/default.png'  }}" alt="">
+      </div>
+      <div style=" height:20px;border-left: 2px solid rgba(0,0,0,0.2)"></div>
+      <a routerLink="/dashboard/user" class="btn btn-zebra btn-outline-dark px-4">
+        <i class="fas fa-plus-circle me-2"></i> add new user</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+
+    <h2 class="fw-bold">Important Task</h2>
+
+    <div class="row">
+      <div class="col-lg-6" *ngFor="let task of overview.importantTasks">
+        <app-task-important-item [task]="task" ></app-task-important-item>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <h2 class="fw-bold">Recent Task</h2>
+    <div class="row">
+      <div class="col-12" *ngFor="let task of overview.recentTasks">
+        <app-task-item [task]="task" ></app-task-item>
+      </div>
+      <div class="col-12">
+        <a routerLink="/dashboard/task" class="btn btn-zebra btn-lg btn-outline-dark px-4 d-inline-block w-100 py-3"><i class="fas fa-plus me-2"></i> add new task</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+

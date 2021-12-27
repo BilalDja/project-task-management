@@ -14,11 +14,17 @@ import javax.validation.constraints.NotNull;
 public class UserVM {
 
   @NotNull
-  @Unique(table = "users", field = "username", auth = true)
+  private String firstName;
+
+  @NotNull
+  private String lastName;
+
+  @NotNull
+  @Unique(table = "user", field = "username", auth = false)
   private String username;
 
   @NotNull
-  @Unique(table = "users", field = "email", auth = true)
+  @Unique(table = "user", field = "email", auth = false)
   private String email;
 
 }

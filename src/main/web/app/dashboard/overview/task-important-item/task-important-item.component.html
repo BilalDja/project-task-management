@@ -1,0 +1,16 @@
+<div class="card shadow bg-primary border-0 p-4 mb-4">
+  <div class="mb-5 d-flex gap-4 align-items-center">
+    <img class="img-fluid shadow rounded-circle" width="52" src="{{ task.userPhotoName ? 'http://localhost:8080/api/files/'+task.userPhotoName : 'assets/image/default.png'  }}">
+    <div>
+      <h6 class="mb-0">{{ task.userFirstName + ' '  + task.userLastName | titlecase }}</h6>
+      <h6 class="mb-0 fw-bold">{{ task.username }}</h6>
+    </div>
+  </div>
+  <div class="mb-5" style="min-height: 125px; max-height: 125px; height: 125px">
+    <h3 class="fw-bold">{{ task.title }}</h3>
+    <p>{{ task.title }}</p>
+  </div>
+  <div>
+    <span class="fw-bold badge bg-black p-2">{{ task.status?.replace("_", " ") | uppercase }}</span>
+  </div>
+</div>

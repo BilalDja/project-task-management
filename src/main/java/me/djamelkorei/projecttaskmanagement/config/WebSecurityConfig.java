@@ -5,6 +5,7 @@ import me.djamelkorei.projecttaskmanagement.security.DaoUserDetailsService;
 import me.djamelkorei.projecttaskmanagement.security.jwt.JWTConfigurer;
 import me.djamelkorei.projecttaskmanagement.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -64,6 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .antMatchers("/api/auth/login").permitAll()
       .antMatchers("/api/auth/reset-password/init").permitAll()
       .antMatchers("/api/auth/reset-password/finish").permitAll()
+      .antMatchers(HttpMethod.GET,"/api/files/**").permitAll()
       .antMatchers("/api/**").authenticated()
       .anyRequest().permitAll()
       .and()

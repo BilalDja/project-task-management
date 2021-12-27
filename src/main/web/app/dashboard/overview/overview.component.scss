@@ -1,0 +1,34 @@
+$size: 56px;
+
+.group-image {
+  display: flex;
+
+  span {
+    display: inline-flex;
+    align-items:center;
+    justify-content: center;
+    background: black;
+    color: white;
+    z-index: 3;
+    font-weight: bold;
+
+
+    + * {
+      z-index: 2;
+
+      + * {
+        z-index: 1;
+      }
+    }
+  }
+
+  * {
+    border-radius: 50%;
+    z-index: 2;
+    margin-left: -16px;
+    border: 4px solid white;
+    width: $size;
+    height: $size;
+  }
+
+}

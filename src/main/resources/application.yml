@@ -2,14 +2,6 @@ server:
   port: 8080
 
 spring:
-  h2:
-    console:
-      enabled: true
-  datasource:
-    url: jdbc:h2:mem:test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
   jpa:
     show-sql: true
     defer-datasource-initialization: true
@@ -39,3 +31,30 @@ app:
       token-validity-in-seconds-for-remember-me: 2592000
   mail:
     reset-key-validity-second: 120
+  storage:
+    location: /home/djamel/Projects/tutorials/project-task-management/storage
+
+---
+spring:
+  config:
+    activate:
+      on-profile:: psql
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/taskmanagement
+    username: taskmanagement
+    password: taskmanagement
+
+---
+spring:
+  config:
+    activate:
+      on-profile:: h2
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:taskmanagement
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver

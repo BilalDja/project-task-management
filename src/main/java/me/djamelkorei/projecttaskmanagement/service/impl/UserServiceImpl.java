@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,6 +45,16 @@ public class UserServiceImpl implements UserService {
   public DataTablesOutput<User> findAll(DataTablesInput dataTablesInput) {
     log.debug("Request to get all Users");
     return userRepository.findAll(dataTablesInput);
+  }
+
+  /**
+   * Get all the users.
+   *
+   * @return  the list of entities.
+   */
+  @Transactional(readOnly = true)
+  public List<User> findAll() {
+    return userRepository.findAllByActiveIsTrue();
   }
 
   /**

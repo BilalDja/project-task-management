@@ -1,0 +1,181 @@
+<div class="mb-4 d-flex align-items-center">
+  <div>
+    <h2 class="fw-bold">List task</h2>
+    <hr style="width: 50px"/>
+  </div>
+  <button *ngIf="account && account.roleName === 'ROLE_ADMIN'" (click)="toggleModal()"
+          class="btn btn-zebra btn-outline-dark px-4 ms-auto"><i
+    class="fas fa-plus-circle me-2"></i> add new task
+  </button>
+</div>
+
+<div class="table-responsive-lg">
+  <table #ref datatable [dtOptions]="dataTableOptions" class="table table-light shadow w-100">
+    <thead>
+    <tr>
+      <th style="width:40px">#</th>
+      <th>Task</th>
+      <th style="width:90px">Status</th>
+      <th style="width:90px">Priority</th>
+      <th style="width:90px">User</th>
+      <th *ngIf="account && account.roleName === 'ROLE_ADMIN'" style="width:220px">Actions</th>
+      <th *ngIf="account && account.roleName === 'ROLE_USER'" style="width:110px">Actions</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="tasks?.length !=  0">
+    <tr *ngFor="let task of tasks; let i = index">
+      <td>
+        <span class="badge bg-dark shadow ms-3">{{ task.taskId }}</span>
+      </td>
+      <td>
+        <div class="p-2">
+          <h5 class="fw-bold text-muted d-flex">
+            <span>{{ task.title }}</span>
+          </h5>
+          <p class="mb-0">{{ task.description }}</p>
+        </div>
+      </td>
+      <td>
+      <span
+        class="badge {{ task.status == status.REQUESTED ? 'bg-warning' :  task.status == status.IN_PROGRESS ? 'bg-secondary' : 'bg-info'  }} shadow text-dark fw-bold px-3 py-2">{{ task.status }}</span>
+      </td>
+      <td>
+      <span
+        class="badge {{ task.priority == priority.LOW ? 'bg-success' :  task.priority == priority.MEDIUM ? 'bg-warning' : 'bg-danger'  }} shadow text-dark fw-bold px-3 py-2">{{ task.priority }}</span>
+      </td>
+      <td><span class="badge bg-primary shadow text-dark fw-bold px-3 py-2">@{{ task.username }}</span></td>
+      <td>
+        <button class="btn btn-sm text-light shadow btn-dark px-3 me-2" (click)="toggleModal(task)"><i
+          class="fas fa-pen me-2"></i> edit
+        </button>
+        <button *ngIf="account && account.roleName === 'ROLE_ADMIN'"
+                class="btn btn-sm px-3 text-light shadow btn-danger"
+                (click)="onDelete(task.taskId)"><i
+          class="fas fa-trash-alt me-2"></i> remove
+        </button>
+      </td>
+    </tr>
+    </tbody>
+    <tbody *ngIf="tasks?.length == 0">
+    <tr>
+      <td colspan="3" class="no-data-available">No data!</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div
+  class="modal fade"
+  id="taskModal"
+  tabindex="-1"
+  aria-labelledby="taskModalLabel"
+  aria-hidden="true"
+  style="backdrop-filter:blur(1px) brightness(90%); transition: none"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <!-- Title -->
+          <h6 class="fw-bold text-uppercase"><i class="fas fa-pen"></i> add new task</h6>
+          <hr>
+
+          <div class="row">
+            <div class="col-md-6">
+              <!-- Title input -->
+              <div class="mb-4">
+                <label class="form-label" for="title">Title</label>
+                <div class="mb-4">
+                  <input
+                    [readOnly]="account && account.roleName === 'ROLE_USER'"
+                    formControlName="title"
+                    type="text"
+                    id="title"
+                    class="form-control"
+                    placeholder="Enter a title"
+                    [ngClass]="{ 'is-invalid': isSubmitted && f.title.errors }"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-4">
+                <label class="form-label" for="title">Status</label>
+                <select
+                  formControlName="status"
+                  type="text"
+                  id="status"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': isSubmitted && f.status.errors }">
+                  <option value="{{ status.REQUESTED }}">Requested</option>
+                  <option value="{{ status.IN_PROGRESS }}">In progress</option>
+                  <option value="{{ status.COMPLETED }}">Completed</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="account && account.roleName === 'ROLE_ADMIN'">
+              <div class="mb-4">
+                <label class="form-label" for="title">Priority</label>
+                <select
+                  formControlName="priority"
+                  type="text"
+                  id="priority"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': isSubmitted && f.priority.errors }">
+                  <option value="{{ priority.LOW }}">Low</option>
+                  <option value="{{ priority.MEDIUM }}">Medium</option>
+                  <option value="{{ priority.HIGH }}">Hight</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="account && account.roleName === 'ROLE_ADMIN'">
+            <div class="col-md-6">
+              <div class="mb-4">
+                <label class="form-label" for="title">User</label>
+                <ng-select [items]="users"
+
+                           bindLabel="username"
+                           bindValue="userId"
+                           formControlName="userId"
+                           class="form-control py-0"
+                           placeholder="Select a user"
+                           [ngClass]="{ 'is-invalid': isSubmitted && f.userId.errors }">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="mb-4">
+            <label class="form-label" for="title">Description</label>
+            <textarea
+              [readOnly]="account && account.roleName === 'ROLE_USER'"
+              formControlName="description"
+              type="text"
+              id="description"
+              class="form-control"
+              placeholder="Enter a description"
+              [ngClass]="{ 'is-invalid': isSubmitted && f.description.errors }" rows="4">
+
+            </textarea>
+          </div>
+
+          <div class="text-danger"
+               *ngIf="isSubmitted && ( f.title.errors ||  formErrors.title.length > 0 ) ">
+            {{ formErrors.title.length > 0 ? formErrors.title[0] : 'field is required' }}
+          </div>
+
+          <!-- Submit -->
+          <hr>
+          <div class="">
+            <button type="button" class="btn btn-danger me-2 shadow" (click)="toggleModal()">Close</button>
+            <button type="submit" class="btn btn-primary shadow">Save</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+

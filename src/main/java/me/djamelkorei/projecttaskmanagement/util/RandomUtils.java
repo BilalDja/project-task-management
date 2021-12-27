@@ -13,6 +13,7 @@ public final class RandomUtils {
 
   private static final int DEF_COUNT = 7;
   private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+  private static final String PREFIX_FILE = "file-";
 
   static {
     SECURE_RANDOM.nextBytes(new byte[64]);
@@ -23,6 +24,10 @@ public final class RandomUtils {
 
   public static String generateRandomAlphanumericString() {
     return RandomStringUtils.random(DEF_COUNT, 0, 0, true, true, null, SECURE_RANDOM);
+  }
+
+  public static String generateFileName() {
+    return PREFIX_FILE.concat(generateRandomAlphanumericString());
   }
 
   public static String generatePassword() {

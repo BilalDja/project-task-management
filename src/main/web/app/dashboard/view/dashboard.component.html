@@ -1,0 +1,29 @@
+<div class="shadow position-relative" style="z-index: 2">
+  <nav class="nav justify-content-center" aria-label="Secondary navigation">
+    <a class="nav-link" routerLink="overview" *ngIf="account && account.roleName === 'ROLE_ADMIN'"
+      ><i class="fas fa-bars me-2"></i> Overview</a
+    >
+    <a class="nav-link" routerLink="user" *ngIf="account && account.roleName === 'ROLE_ADMIN'">
+      <i class="fas fa-users me-2"></i> User
+    </a>
+    <a class="nav-link" routerLink="task">
+      <i class="fas fa-tasks me-2"></i> Task
+    </a>
+    <a class="nav-link" routerLink="account"
+      ><i class="far fa-user me-2"></i> Account</a
+    >
+  </nav>
+</div>
+<div class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card border-0 shadow h-100" id="nav-tabContent">
+          <div class="card-body">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

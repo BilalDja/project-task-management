@@ -1,0 +1,174 @@
+<div class="mb-4 d-flex align-items-center">
+  <div>
+    <h2 class="fw-bold">List user</h2>
+    <hr style="width: 50px"/>
+  </div>
+  <button  (click)="toggleModal()" class="btn btn-zebra btn-outline-dark px-4 ms-auto"><i class="fas fa-plus-circle me-2"></i> add new user</button>
+</div>
+
+<div class="table-responsive-lg">
+  <table #ref datatable [dtOptions]="dataTableOptions" class="table table-light shadow w-100 my-4">
+    <thead>
+    <tr>
+      <th style="width:40px">#</th>
+      <th>User</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th style="width:220px">Actions</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="users?.length !=  0">
+    <tr *ngFor="let user of users; let i = index">
+      <td>
+        <span class="badge bg-dark shadow ms-3">{{ user.userId }}</span>
+      </td>
+      <td class="p-3">
+        <div class="d-flex gap-2 align-items-center">
+          <img class="img-fluid rounded-circle shadow" width="42" src="{{ user.photoName ? 'http://localhost:8080/api/files/'+user.photoName : 'assets/image/default.png'  }}">
+          <div class="small">
+            {{ user.firstName }}<br>{{ user.lastName }}
+          </div>
+        </div>
+      </td>
+      <td><span class="badge bg-primary shadow text-dark fw-bold px-3 py-2">@{{ user.username }}</span></td>
+      <td><span class="badge bg-light shadow text-dark fw-bold px-3 py-2"><i class="fas fa-envelope"></i> {{ user.email }}</span></td>
+      <td><span class="badge shadow  fw-bold px-3 py-2 {{ user.roleName == authorities.ADMIN ? 'bg-dark text-light' : 'bg-secondary text-dark'  }} "><i class="fas fa-shield-alt"></i> {{ user.roleName == authorities.ADMIN ? user.userId === 1 ? 'super' :'admin' : 'user' }}</span></td>
+      <td><span class="badge shadow text-light   {{ user.active ? 'bg-info' :'bg-warning' }} fw-bold px-3 py-2"> {{ user.active ? 'active' :'not-active' }}</span></td>
+      <td>
+        <button class="btn btn-sm text-light shadow btn-dark px-3 me-2" (click)="toggleModal(user)"><i
+          class="fas fa-pen me-2"></i> edit
+        </button>
+        <button *ngIf="user.userId !== 1" class="btn btn-sm px-3 text-light shadow btn-danger" (click)="onDelete(user.userId)"><i
+          class="fas fa-trash-alt me-2"></i> remove
+        </button>
+      </td>
+    </tr>
+    </tbody>
+    <tbody *ngIf="users?.length == 0">
+    <tr>
+      <td colspan="3" class="no-data-available">No data!</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div
+  class="modal fade"
+  id="userModal"
+  tabindex="-1"
+  aria-labelledby="userModalLabel"
+  aria-hidden="true"
+  style="backdrop-filter:blur(1px) brightness(90%); transition: none"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <!-- Title -->
+          <h6 class="fw-bold text-uppercase"> <i class="fas fa-user me-3"></i> add new user</h6>
+          <hr>
+
+          <div class="row">
+            <div class="col">
+              <!-- FirstName input -->
+              <div class="mb-4">
+                <label class="form-label" for="userName">First Name</label>
+                <input
+                  formControlName="firstName"
+                  type="text"
+                  id="firstName"
+                  class="form-control"
+                  placeholder="Enter a username"
+                  [ngClass]="{ 'is-invalid': isSubmitted && f.firstName.errors }"/>
+                <div class="text-danger"
+                     *ngIf="isSubmitted && ( f.firstName.errors ||  formErrors.username.length > 0 ) ">
+                  {{ formErrors.firstName.length > 0 ? formErrors.firstName[0] : 'first name is required' }}
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <!-- LastName input -->
+              <div class="mb-4">
+                <label class="form-label" for="userName">Last Name</label>
+                <input
+                  formControlName="lastName"
+                  type="text"
+                  id="lastName"
+                  class="form-control"
+                  placeholder="Enter a lastName"
+                  [ngClass]="{ 'is-invalid': isSubmitted && f.lastName.errors }"/>
+                <div class="text-danger"
+                     *ngIf="isSubmitted && ( f.lastName.errors ||  formErrors.lastName.length > 0 ) ">
+                  {{ formErrors.lastName.length > 0 ? formErrors.lastName[0] : 'last name is required' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <!-- Username input -->
+              <div class="mb-4">
+                <label class="form-label" for="userName">Username</label>
+                <input
+                  formControlName="username"
+                  type="text"
+                  id="userName"
+                  class="form-control"
+                  placeholder="Enter a username"
+                  [ngClass]="{ 'is-invalid': isSubmitted && f.username.errors }"/>
+                <div class="text-danger"
+                     *ngIf="isSubmitted && ( f.username.errors ||  formErrors.username.length > 0 ) ">
+                  {{ formErrors.username.length > 0 ? formErrors.username[0] : 'username is required' }}
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <!-- Email input -->
+              <div class="mb-4">
+                <label class="form-label" for="userName">Email</label>
+                <input
+                  formControlName="email"
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  placeholder="Enter a email"
+                  [ngClass]="{ 'is-invalid': isSubmitted && f.email.errors }"/>
+                <div class="text-danger"
+                     *ngIf="isSubmitted && ( f.email.errors ||  formErrors.email.length > 0 ) ">
+                  {{ formErrors.email.length > 0 ? formErrors.email[0] : 'email is required' }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Role Select-->
+          <div class="mb-4">
+            <label class="form-label" for="userName">Role</label>
+            <select
+              formControlName="roleId"
+              id="roleId"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': isSubmitted && f.roleId.errors }">
+              <option value="1">admin</option>
+              <option value="2">user</option>
+            </select>
+          </div>
+          <!-- Active input -->
+          <div class="form-check form-switch">
+            <input formControlName="active"  class="form-check-input" type="checkbox" id="active">
+            <label class="form-check-label" for="active">active</label>
+          </div>
+          <!-- Submit -->
+          <hr>
+          <div class="">
+            <button type="button" class="btn btn-danger me-2 shadow" (click)="toggleModal()">Close</button>
+            <button type="submit" class="btn btn-primary shadow">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

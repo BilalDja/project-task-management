@@ -1,0 +1,56 @@
+<nav class="navbar sticky-top navbar-expand-lg  navbar-light bg-white shadow">
+  <div class="container">
+    <a class="navbar-brand" routerLink="home">
+      <i class="fas fa-crop-alt me-2"></i> {{ title  }}</a
+    >
+    <button
+      (click)="collapsed = !collapsed"
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse"
+      [ngClass]="collapsed ? 'show' : ''"
+      id="navbarNav"
+    >
+      <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item" *ngIf="account !== null">
+          <span style="cursor: pointer" class="nav-link" routerLink="dashboard/overview"
+            ><i class="far fa-user-circle"></i> {{ account.username }}</span
+          >
+        </li>
+
+        <li class="nav-item" *ngIf="account !== null">
+          <a style="cursor: pointer" class="nav-link" (click)="logout()"
+            ><i class="far fa-share-square"></i> Logout</a
+          >
+        </li>
+
+        <li class="nav-item" *ngIf="account === null">
+          <a
+            routerLink="login"
+            style="cursor: pointer"
+            class="nav-link"
+            ><i class="fas fa-sign-in-alt me-2"></i> Login</a
+          >
+        </li>
+        <li class="nav-item" *ngIf="account === null">
+          <a
+            routerLink="register"
+            style="cursor: pointer"
+            class="nav-link"
+          ><i class="fas fa-sign-out-alt me-2"></i> Register</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

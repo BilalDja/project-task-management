@@ -2,18 +2,25 @@ package me.djamelkorei.projecttaskmanagement.web.rest;
 
 import lombok.RequiredArgsConstructor;
 import me.djamelkorei.projecttaskmanagement.domain.Task;
+import me.djamelkorei.projecttaskmanagement.domain.enumeration.Priority;
 import me.djamelkorei.projecttaskmanagement.domain.enumeration.Status;
+import me.djamelkorei.projecttaskmanagement.repository.TaskRepository;
+import me.djamelkorei.projecttaskmanagement.repository.UserRepository;
 import me.djamelkorei.projecttaskmanagement.security.AuthoritiesConstants;
 import me.djamelkorei.projecttaskmanagement.service.TaskService;
 import me.djamelkorei.projecttaskmanagement.service.UserService;
 import me.djamelkorei.projecttaskmanagement.service.dto.TaskDTO;
+import me.djamelkorei.projecttaskmanagement.service.dto.TaskStatisticDTO;
 import me.djamelkorei.projecttaskmanagement.service.mapper.TaskMapper;
+import me.djamelkorei.projecttaskmanagement.service.mapper.UserMapper;
 import me.djamelkorei.projecttaskmanagement.util.SecurityUtils;
 import me.djamelkorei.projecttaskmanagement.web.rest.errors.CurrentUserLoginNotFoundException;
 import me.djamelkorei.projecttaskmanagement.web.rest.errors.ResourceNotFoundException;
 import me.djamelkorei.projecttaskmanagement.web.rest.vm.TaskVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.Instant;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing {@link Task}.
@@ -37,10 +45,31 @@ public class TaskResource {
 
   private final Logger log = LoggerFactory.getLogger(TaskResource.class);
   private final TaskService taskService;
-  private final UserService userService;
   private final TaskMapper taskMapper;
 
-  @PostMapping("/tasksList")
+
+  // todo: should be called inside a service not a controller
+  private final TaskRepository taskRepository;
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
+  private final UserService userService;
+
+  // todo: refactor
+  @GetMapping("/taskStatistic")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<TaskStatisticDTO> taskStatisticDTO() {
+    TaskStatisticDTO taskStatisticDTO = new TaskStatisticDTO();
+    taskStatisticDTO.setTaskRequestedTotal(taskRepository.countAllByStatusEquals(Status.REQUESTED));
+    taskStatisticDTO.setTaskInProgressTotal(taskRepository.countAllByStatusEquals(Status.IN_PROGRESS));
+    taskStatisticDTO.setTaskCompletedTotal(taskRepository.countAllByStatusEquals(Status.COMPLETED));
+    taskStatisticDTO.setUsersTotal(userRepository.count());
+    taskStatisticDTO.setImportantTasks(taskRepository.getAllByPriorityEqualsAndStatusEquals(PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "createdAt")), Priority.HIGH, Status.REQUESTED).stream().map(taskMapper::mapToTaskDTO).collect(Collectors.toList()));
+    taskStatisticDTO.setRecentTasks(taskRepository.findAll(PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "createdAt"))).stream().map(taskMapper::mapToTaskDTO).collect(Collectors.toList()));
+    taskStatisticDTO.setUsers(userRepository.findAll(PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "userId"))).stream().map(userMapper::mapToUserShortDTO).collect(Collectors.toList()));
+    return ResponseEntity.ok(taskStatisticDTO);
+  }
+
+  @GetMapping("/tasksDataTable")
   public DataTablesOutput<TaskDTO> findAllTasksList(DataTablesInput input) {
     log.debug("REST request to get a datatable of Tasks");
     if (SecurityUtils.getCurrentUserId().isEmpty()) {
@@ -87,9 +116,26 @@ public class TaskResource {
    * or with status {@code 500 (Internal Server Error)} if the taskDTO couldn't be updated.
    */
   @PutMapping("/tasks/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<TaskDTO> updateTask(@Valid @RequestBody TaskDTO taskDTO, @PathVariable Long id) {
     log.debug("REST request to update Task : {}", taskDTO);
+
+    if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
+      Long userId = SecurityUtils.getCurrentUserId().orElse(0L);
+      if (userId.equals(taskDTO.getUserId())) {
+        return taskService.findOne(taskDTO.getTaskId())
+          .map(t -> {
+            t.setStatus(taskDTO.getStatus());
+            return t;
+          })
+          .map(taskService::save)
+          .map(taskMapper::mapToTaskDTO)
+          .map(ResponseEntity::ok)
+          .orElseThrow(ResourceNotFoundException::new);
+      } else {
+        throw new ResourceNotFoundException();
+      }
+    }
+
     return taskService.findOne(id)
       .map(c -> taskMapper.mapToTask(taskDTO, c))
       .map(t -> {

@@ -6,6 +6,7 @@ import me.djamelkorei.projecttaskmanagement.mail.MailService;
 import me.djamelkorei.projecttaskmanagement.repository.UserRepository;
 import me.djamelkorei.projecttaskmanagement.service.UserService;
 import me.djamelkorei.projecttaskmanagement.service.dto.UserDTO;
+import me.djamelkorei.projecttaskmanagement.service.dto.UserShortDTO;
 import me.djamelkorei.projecttaskmanagement.service.mapper.UserMapper;
 import me.djamelkorei.projecttaskmanagement.util.RandomUtils;
 import me.djamelkorei.projecttaskmanagement.web.rest.errors.ResourceNotFoundException;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * REST controller for managing {@link User}.
@@ -43,16 +45,28 @@ public class UserResource {
   private final UserRepository userRepository;
 
   /**
-   * {@code GET  /users} : get all the users.
+   * {@code GET  /usersDataTable} : get all the users datatable.
    *
    * @param dataTablesInput .
    * @return the {@link DataTablesOutput} with status {@code 200 (OK)} and the list of users in body.
    */
-  @PostMapping("/usersList")
+  @GetMapping("/usersDataTable")
   @PreAuthorize("hasRole('ADMIN')")
-  public DataTablesOutput<UserDTO> findAllUsers(@Valid DataTablesInput dataTablesInput) {
+  public DataTablesOutput<UserDTO> findAllUsersDatatable(DataTablesInput dataTablesInput) {
     log.debug("REST request to get a datatable of Users");
     return userMapper.maptToDataTableUserDTO(userService.findAll(dataTablesInput));
+  }
+
+  /**
+   * {@code GET  /users} : get all the users.
+   *
+   * @return the {@link DataTablesOutput} with status {@code 200 (OK)} and the list of users in body.
+   */
+  @GetMapping("/usersShort")
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<UserShortDTO> findAllUsers() {
+    log.debug("REST request to get all Users");
+    return userService.findAll().stream().map(userMapper::mapToUserShortDTO).toList();
   }
 
   /**

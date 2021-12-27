@@ -6,6 +6,5 @@ package me.djamelkorei.projecttaskmanagement.domain.enumeration;
 public enum Status {
   REQUESTED,
   IN_PROGRESS,
-  COMPLETED,
-  APPROVED
+  COMPLETED
 }

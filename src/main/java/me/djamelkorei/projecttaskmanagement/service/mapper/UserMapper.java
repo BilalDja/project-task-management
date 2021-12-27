@@ -9,6 +9,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import java.util.List;
+
 /**
  * Mapper for the entity {@link User}.
  *
@@ -18,7 +20,8 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 public interface UserMapper {
 
   @Named("userDTO")
-  @Mapping(target = "role", qualifiedByName = {"roleDTO"})
+  @Mapping(target = "roleId", source = "role.roleId")
+  @Mapping(target = "roleName", source = "role.roleName")
   UserDTO mapToUserDTO(User user);
 
   @Named("userShortDTO")

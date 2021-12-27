@@ -73,7 +73,7 @@ public class AuthResource {
     user.setPassword(passwordEncoder.encode(managedUserVM.getPassword()));
     user.setResetDate(null);
     user.setResetKey(null);
-    user.setActive(false);
+    user.setActive(true);
     user.setRole(role);
     userService.save(user);
     return ResponseEntity.ok().build();
@@ -118,11 +118,14 @@ public class AuthResource {
    * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
    */
   @PostMapping(path = "/auth/me")
-  public ResponseEntity<Object> updateAccount(@Valid @RequestBody UserVM userVM) {
+  public ResponseEntity<Object> updateAccount(@Valid @RequestBody UserAuthVM userVM) {
     userService.findById(SecurityUtils.getCurrentUserId().orElseThrow(CurrentUserLoginNotFoundException::new))
       .map(u -> {
+        u.setFirstName(userVM.getFirstName());
+        u.setLastName(userVM.getLastName());
         u.setUsername(userVM.getUsername());
         u.setEmail(userVM.getEmail());
+        u.setPhotoName(userVM.getPhotoName());
         return u;
       }).map(userService::save);
     return new ResponseEntity<>(null, HttpStatus.OK);

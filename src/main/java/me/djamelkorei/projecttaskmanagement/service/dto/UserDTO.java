@@ -27,18 +27,24 @@ public class UserDTO implements Serializable {
   private String lastName;
 
   @NotNull
-  @Unique(table = "users", field = "username")
+  @Unique(table = "user", field = "username", auth = false)
   private String username;
+
+  private String photoName;
 
   @NotNull
   @Email
-  @Unique(table = "users", field = "email")
+  @Unique(table = "user", field = "email", auth = false)
   private String email;
 
   @NotNull
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Long roleId;
 
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String roleName;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private RoleDTO role;
 
   @NotNull

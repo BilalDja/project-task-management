@@ -5,6 +5,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,6 +23,14 @@ public interface UserService {
    */
   @Transactional(readOnly = true)
   DataTablesOutput<User> findAll(DataTablesInput dataTablesInput);
+
+  /**
+   * Get all the users.
+   *
+   * @return  the list of entities.
+   */
+  @Transactional(readOnly = true)
+  List<User> findAll();
 
   /**
    * Get one user by id.

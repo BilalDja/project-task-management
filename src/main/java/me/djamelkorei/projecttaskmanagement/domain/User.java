@@ -49,6 +49,8 @@ public class User implements UserDetails, Serializable {
 
   private Instant resetDate;
 
+  private String photoName;
+
   @Column(columnDefinition = "boolean default false", nullable = false)
   private boolean active;
 

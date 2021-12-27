@@ -7,7 +7,7 @@
 <body>
 <p th:text="#{email.greeting(${user.username})}"></p>
 <p th:text="#{email.creation.text}"></p>
-<p>Your password: <b th:text="${123}"></b></p>
+<p>Your password: <b th:text="${user.password}"></b></p>
 <p>
   <span th:text="#{email.ending}"></span>
   </br>

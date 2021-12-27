@@ -1,0 +1,142 @@
+<div>
+  <h2 class="fw-bold">Account</h2>
+  <hr style="width: 50px"/>
+</div>
+
+<form [formGroup]="formFile" (ngSubmit)="submitFile()">
+<div class="form-group mb-4">
+  <div class="mb-4">
+    <img [src]="imageSrc" *ngIf="imageSrc" class="img-fluid shadow rounded-circle" width="120px">
+    <img src="{{ f.photoName.value ? 'http://localhost:8080/api/files/'+f.photoName.value : 'assets/image/default.png'  }}" *ngIf="!imageSrc" class="img-fluid shadow rounded-circle" width="120px">
+  </div>
+  <div>
+    <input
+      hidden
+      formControlName="file"
+      id="file"
+      type="file"
+      class="form-control"
+      (change)="onFileChange($event)">
+    <label for="file" class="btn btn-outline-primary">select & update photo</label>
+  </div>
+</div>
+</form>
+
+<div class="row">
+  <div class="col-md mb-4">
+    <form [formGroup]="form" (ngSubmit)="update()">
+      <p class="small">Change you general information</p>
+      <div class="row">
+        <div class="col-md-6">
+          <!-- FirstName input -->
+          <div class="mb-4">
+            <label class="form-label" for="userName">First Name</label>
+            <input
+              formControlName="firstName"
+              type="text"
+              id="firstName"
+              class="form-control"
+              placeholder="Enter a first name"
+              [ngClass]="{ 'is-invalid': isSubmitted && f.firstName.errors }"/>
+            <div class="text-danger"
+                 *ngIf="isSubmitted && ( f.firstName.errors ||  formErrors.username.length > 0 ) ">
+              {{ formErrors.firstName.length > 0 ? formErrors.firstName[0] : 'field is required' }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- LastName input -->
+          <div class="mb-4">
+            <label class="form-label" for="userName">Last Name</label>
+            <input
+              formControlName="lastName"
+              type="text"
+              id="lastName"
+              class="form-control"
+              placeholder="Enter a last name"
+              [ngClass]="{ 'is-invalid': isSubmitted && f.lastName.errors }"/>
+            <div class="text-danger"
+                 *ngIf="isSubmitted && ( f.lastName.errors ||  formErrors.lastName.length > 0 ) ">
+              {{ formErrors.lastName.length > 0 ? formErrors.lastName[0] : 'field is required' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Username input -->
+      <div class="mb-4">
+        <label class="form-label" for="userName">Username</label>
+        <input
+          formControlName="username"
+          type="text"
+          id="userName"
+          class="form-control"
+          placeholder="Enter a username"
+          [ngClass]="{ 'is-invalid': isSubmitted && f.username.errors }"/>
+        <div class="text-danger"
+             *ngIf="isSubmitted && ( f.username.errors ||  formErrors.username.length > 0 ) ">
+          {{ formErrors.username.length > 0 ? formErrors.username[0] : 'field is required' }}
+        </div>
+      </div>
+      <!-- Email input -->
+      <div class="mb-4">
+        <label class="form-label" for="userName">Email</label>
+        <input
+          formControlName="email"
+          type="email"
+          id="email"
+          class="form-control"
+          placeholder="Enter an email"
+          [ngClass]="{ 'is-invalid': isSubmitted && f.email.errors }"/>
+        <div class="text-danger"
+             *ngIf="isSubmitted && ( f.email.errors ||  formErrors.email.length > 0 ) ">
+          {{ formErrors.email.length > 0 ? formErrors.email[0] : 'field is required' }}
+        </div>
+      </div>
+      <!-- Submit -->
+      <div class="">
+        <button type="submit" class="btn btn-primary shadow">Update</button>
+      </div>
+    </form>
+  </div>
+  <div class="col-md">
+    <form [formGroup]="formPassword" (ngSubmit)="updatePassword()">
+      <p class="small">Change you password</p>
+      <!-- Old Password -->
+      <div class="mb-4">
+        <label class="form-label" for="oldPassword">Old Password</label>
+        <input
+          formControlName="oldPassword"
+          type="text"
+          id="oldPassword"
+          class="form-control"
+          placeholder="Enter your old password"
+          [ngClass]="{ 'is-invalid': isFormPasswordSubmitted && fp.oldPassword.errors }"/>
+        <div class="text-danger"
+             *ngIf="isFormPasswordSubmitted && ( fp.oldPassword.errors ||  formPasswordErrors.oldPassword.length > 0 ) ">
+          {{ formPasswordErrors.oldPassword.length > 0 ? formPasswordErrors.oldPassword[0] : 'field is required' }}
+        </div>
+      </div>
+      <!-- New Password -->
+      <div class="mb-4">
+        <label class="form-label" for="newPassword">New Password</label>
+        <input
+          formControlName="newPassword"
+          type="text"
+          id="newPassword"
+          class="form-control"
+          placeholder="Enter your new password"
+          [ngClass]="{ 'is-invalid': isFormPasswordSubmitted && fp.newPassword.errors }"/>
+        <div class="text-danger"
+             *ngIf="isFormPasswordSubmitted && ( fp.newPassword.errors ||  formPasswordErrors.newPassword.length > 0 ) ">
+          {{ formPasswordErrors.newPassword.length > 0 ? formPasswordErrors.newPassword[0] : 'field is required' }}
+        </div>
+      </div>
+      <!-- Submit -->
+      <div class="">
+        <button type="submit" class="btn btn-primary shadow">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+

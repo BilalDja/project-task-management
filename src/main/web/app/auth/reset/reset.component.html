@@ -1,0 +1,109 @@
+<div class="container" style="min-height: calc(100vh - 128px)">
+
+  <div class="row justify-content-center">
+    <div class="col-5">
+      <div class="card border-0 shadow my-5">
+        <div class="card-body p-0">
+
+          <div class="p-5">
+
+            <form [formGroup]="resetInitForm" (ngSubmit)="reset()" *ngIf="isInit">
+              <!-- Email input -->
+              <div class="mb-4">
+                <label class="form-label" for="email">Email address</label>
+                <input
+                  formControlName="email"
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  placeholder="Enter a valid email address"
+                  [ngClass]="{ 'is-invalid': submitted && fi.email.errors }"
+                />
+                <div class="text-danger" *ngIf="submitted && fi.email.errors">
+                  Enter a valid email address
+                </div>
+              </div>
+              <div class="text-center text-lg-start mt-4 pt-2">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg mb-4"
+                  style="padding-left: 2.5rem; padding-right: 2.5rem"
+                >
+                  Send email
+                </button>
+                <p class="small mt-2 mb-2">
+                  Go back to login page?
+                  <a routerLink="login" class="link-danger">Login</a>
+                </p>
+              </div>
+            </form>
+
+            <form [formGroup]="resetFinishForm" (ngSubmit)="reset()" *ngIf="!isInit">
+
+              <div
+                class="bg-primary text-white d-flex align-items-center justify-content-center position-relative mx-auto rounded-circle mb-4 shadow"
+                style="height: 90px;width: 90px">
+                <h2 class="text-center fw-bold mb-0">{{ counter }}</h2>
+              </div>
+              <!-- Code input -->
+              <div class="mb-4">
+                <label class="form-label" for="email">Code</label>
+                <input
+                  formControlName="code"
+                  type="text"
+                  id="code"
+                  class="form-control"
+                  placeholder="Enter a valid key"
+                  [ngClass]="{ 'is-invalid': submitted && ff.code.errors }"
+                />
+                <div class="text-danger" *ngIf="submitted && ff.code.errors">
+                  Enter a valid code
+                </div>
+
+              </div>
+              <!-- Password input -->
+              <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input
+                  formControlName="password"
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="Enter password"
+                  [ngClass]="{ 'is-invalid': submitted && ff.password.errors }"
+                />
+                <div class="text-danger" *ngIf="submitted && ff.password.errors">
+                  Enter your password
+                </div>
+              </div>
+              <div class="text-center text-lg-start mt-4 pt-2">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg mb-4"
+                  style="padding-left: 2.5rem; padding-right: 2.5rem"
+                >
+                  Reset
+                </button>
+                <p class="small mt-2 mb-2">
+                  Send back code again?
+                  <a (click)="sendAgain()" class="link-danger">Reset</a>
+                </p>
+              </div>
+            </form>
+
+          </div>
+          <div class="alert alert-danger border-0 rounded-0" *ngIf="authenticationError">
+            something went wrong
+          </div>
+
+          <div class="d-flex justify-content-center py-4 px-4 bg-primary">
+            <div class="text-white mb-3 mb-md-0 text-center">
+              Copyright © 2021. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

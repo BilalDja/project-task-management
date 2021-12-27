@@ -1,0 +1,13 @@
+<div class="card p-4 mb-4">
+  <div class="mb-2">
+    <h5 class="fw-bold text-muted d-flex">
+      <span>{{ task.title }}</span>
+      <span class="ms-auto small"><i class="fas fa-circle {{ task.status === 'REQUESTED' ?  'text-warning' : task.status === 'IN_PROGRESS' ? 'text-info' : 'text-primary'  }} me-2"></i>  <small>{{ task.status?.replace("_", " ") | uppercase }}</small></span>
+    </h5>
+    <p class="mb-0">{{ task.description }}</p>
+  </div>
+  <div class="text-muted">
+    <span class="me-4"><i class="far fa-clock"></i> {{ task.createdAt | date }} </span>
+    <span><i class="far fa-user-circle"></i> <b> {{ task.username }}</b> </span>
+  </div>
+</div>

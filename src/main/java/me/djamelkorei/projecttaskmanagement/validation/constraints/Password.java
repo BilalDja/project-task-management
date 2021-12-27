@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {
-  String message() default "Field already exist";
+  String message() default "Password doesn't much";
 
   Class<?>[] groups() default {};
 

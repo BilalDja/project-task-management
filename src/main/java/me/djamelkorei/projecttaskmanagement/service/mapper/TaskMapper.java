@@ -17,7 +17,11 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 public interface TaskMapper {
 
   @Named("taskDTO")
-  @Mapping(target = "user", qualifiedByName = {"userShortDTO"})
+  @Mapping(target = "userId", source = "user.userId")
+  @Mapping(target = "username", source = "user.username")
+  @Mapping(target = "userFirstName", source = "user.firstName")
+  @Mapping(target = "userLastName", source = "user.lastName")
+  @Mapping(target = "userPhotoName", source = "user.photoName")
   TaskDTO mapToTaskDTO(Task task);
 
   @Mapping(target = "taskId", ignore = true)
